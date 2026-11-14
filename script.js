@@ -36,16 +36,15 @@ function createCard(id, label, isBout, isExcuse = false) {
   card.type = 'button';
   card.setAttribute('aria-pressed', 'false');
 
+  // Set background image
+  const imgName = isExcuse ? 'mat' : id;
+  card.style.backgroundImage = `url('images/${imgName}.jpg')`;
+
   const number = document.createElement('span');
   number.className = 'card-number';
   number.textContent = isExcuse ? 'E' : id;
 
-  const name = document.createElement('span');
-  name.className = 'card-label';
-  name.textContent = label;
-
   card.appendChild(number);
-  card.appendChild(name);
 
   card.addEventListener('click', () => toggle(id, card));
 
