@@ -1,0 +1,358 @@
+:root {
+  --bg: #0c0a09;
+  --bg-elevated: #161311;
+  --surface: #1c1816;
+  --surface-hover: #25211e;
+  --gold: #d4a853;
+  --gold-light: #f0d78c;
+  --gold-dim: #8a6d35;
+  --text: #f5efe6;
+  --text-muted: #a89b8c;
+  --fallen: #3a3330;
+  --danger: #c45c4a;
+  --radius: 16px;
+  --shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Outfit', system-ui, sans-serif;
+  overflow-x: hidden;
+}
+
+body {
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(212, 168, 83, 0.12), transparent),
+    radial-gradient(ellipse 60% 40% at 100% 100%, rgba(90, 50, 40, 0.15), transparent),
+    var(--bg);
+}
+
+.app {
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 16px 100px;
+}
+
+/* Header */
+.header {
+  text-align: center;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.header-ornament {
+  width: 60px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  margin: 0 auto 12px;
+}
+
+h1 {
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  font-size: 2.4rem;
+  letter-spacing: 0.12em;
+  background: linear-gradient(180deg, var(--gold-light), var(--gold));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.subtitle {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+
+/* Stats */
+.stats {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 16px;
+}
+
+.stat {
+  text-align: center;
+}
+
+.stat-value {
+  display: block;
+  font-family: 'Cinzel', serif;
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--gold-light);
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.stat-divider {
+  width: 1px;
+  height: 36px;
+  background: linear-gradient(180deg, transparent, var(--gold-dim), transparent);
+}
+
+/* Progress */
+.progress-wrap {
+  height: 4px;
+  background: var(--surface);
+  border-radius: 2px;
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--gold-dim), var(--gold));
+  border-radius: 2px;
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Grid */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  flex: 1;
+}
+
+.card {
+  aspect-ratio: 0.75;
+  background: var(--surface);
+  border: 1px solid rgba(212, 168, 83, 0.15);
+  border-radius: var(--radius);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 0%, rgba(212, 168, 83, 0.08), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.card:active {
+  transform: scale(0.96);
+}
+
+.card:hover::before,
+.card:focus-visible::before {
+  opacity: 1;
+}
+
+.card-number {
+  font-family: 'Cinzel', serif;
+  font-size: 1.65rem;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1;
+  transition: all 0.25s;
+}
+
+.card-label {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  transition: all 0.25s;
+}
+
+/* Bout special */
+.card.bout {
+  border-color: rgba(212, 168, 83, 0.4);
+}
+
+.card.bout .card-number {
+  color: var(--gold-light);
+}
+
+/* Fallen state */
+.card.fallen {
+  background: var(--fallen);
+  border-color: transparent;
+  opacity: 0.55;
+}
+
+.card.fallen .card-number {
+  text-decoration: line-through;
+  text-decoration-color: var(--gold-dim);
+  color: var(--text-muted);
+}
+
+.card.fallen .card-label {
+  color: #6b5f54;
+}
+
+.card.fallen::after {
+  content: '✓';
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  font-size: 0.9rem;
+  color: var(--gold);
+  opacity: 0.8;
+}
+
+/* Excuse special */
+.card.excuse .card-number {
+  font-size: 1.1rem;
+  letter-spacing: 0.05em;
+}
+
+/* Footer / Reset */
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 16px;
+  background: linear-gradient(180deg, transparent, var(--bg) 30%);
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.reset-btn {
+  pointer-events: auto;
+  background: var(--surface);
+  border: 1px solid rgba(212, 168, 83, 0.3);
+  color: var(--gold-light);
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  padding: 14px 28px;
+  border-radius: 999px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: var(--shadow);
+  transition: all 0.2s;
+}
+
+.reset-btn:active {
+  transform: scale(0.97);
+  background: var(--surface-hover);
+}
+
+.reset-icon {
+  font-size: 1.1rem;
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 20px;
+}
+
+.modal-overlay[hidden] {
+  display: none;
+}
+
+.modal {
+  background: var(--bg-elevated);
+  border: 1px solid rgba(212, 168, 83, 0.2);
+  border-radius: 20px;
+  padding: 28px 24px;
+  max-width: 340px;
+  width: 100%;
+  text-align: center;
+  box-shadow: var(--shadow);
+}
+
+.modal h2 {
+  font-family: 'Cinzel', serif;
+  font-size: 1.4rem;
+  margin-bottom: 8px;
+  color: var(--gold-light);
+}
+
+.modal p {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin-bottom: 24px;
+  line-height: 1.4;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.modal-btn {
+  flex: 1;
+  padding: 12px;
+  border-radius: 12px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  transition: all 0.15s;
+}
+
+.modal-btn.cancel {
+  background: var(--surface);
+  color: var(--text);
+}
+
+.modal-btn.confirm {
+  background: var(--gold);
+  color: #1a1208;
+}
+
+.modal-btn:active {
+  transform: scale(0.97);
+}
+
+/* Responsive tweak for very small screens */
+@media (max-width: 360px) {
+  .grid {
+    gap: 8px;
+  }
+  .card-number {
+    font-size: 1.45rem;
+  }
+}
