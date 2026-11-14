@@ -427,10 +427,10 @@ h1 {
 }
 
 .end-btn {
-  background: linear-gradient(145deg, #c45c4a, #a84a3a);
-  color: white;
-  border: none;
-  box-shadow: 0 6px 20px rgba(196, 92, 74, 0.3);
+  background: var(--surface);
+  border: 1px solid rgba(212, 168, 83, 0.28);
+  color: var(--gold-light);
+  box-shadow: var(--shadow);
 }
 
 .reset-btn {

@@ -174,22 +174,24 @@ function renderAll() {
 
 function updateStats() {
   const fallen = Object.keys(assignments).length;
-  fallenCountEl.textContent = fallen;
-  remainingCountEl.textContent = TOTAL - fallen;
-  progressBar.style.width = (fallen / TOTAL * 100) + '%';
+  if (fallenCountEl) fallenCountEl.textContent = fallen;
+  if (remainingCountEl) remainingCountEl.textContent = TOTAL - fallen;
+  if (progressBar) progressBar.style.width = (fallen / TOTAL * 100) + '%';
 
   const remaining = [];
-  for (let i = 1; i <= 21; i++) if (!(i in assignments)) remaining.push(i);
+  for (let i = 1; i <= 21; i++) {
+    if (!(i in assignments)) remaining.push(i);
+  }
   const hasExcuse = !(0 in assignments);
 
   if (remaining.length === 0 && !hasExcuse) {
-    highestEl.textContent = '—';
-    lowestEl.textContent = '—';
+    if (highestEl) highestEl.textContent = '—';
+    if (lowestEl) lowestEl.textContent = '—';
     return;
   }
 
   const highest = remaining.length ? Math.max(...remaining) : null;
-  highestEl.textContent = highest !== null ? highest : '—';
+  if (highestEl) highestEl.textContent = highest !== null ? highest : '—';
 
   let lowestDisplay = '—';
   if (hasExcuse) {
@@ -197,7 +199,7 @@ function updateStats() {
   } else if (remaining.length) {
     lowestDisplay = Math.min(...remaining);
   }
-  lowestEl.textContent = lowestDisplay;
+  if (lowestEl) lowestEl.textContent = lowestDisplay;
 }
 
 function openSelect(cardId, isReassign) {
