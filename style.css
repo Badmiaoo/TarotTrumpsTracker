@@ -166,25 +166,26 @@ h1 {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 28px;
+  gap: 16px;
   margin-bottom: 18px;
+  flex-wrap: wrap;
 }
 
-.stat { text-align: center; }
+.stat { text-align: center; min-width: 52px; }
 
 .stat-value {
   display: block;
   font-family: 'Cinzel', serif;
-  font-size: 2.1rem;
+  font-size: 1.75rem;
   font-weight: 600;
   color: var(--gold-light);
   line-height: 1;
 }
 
 .stat-label {
-  font-size: 0.72rem;
+  font-size: 0.65rem;
   color: var(--text-muted);
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   margin-top: 4px;
 }
@@ -410,28 +411,39 @@ h1 {
   background: linear-gradient(180deg, transparent 0%, var(--bg) 40%);
   display: flex;
   justify-content: center;
+  gap: 12px;
   pointer-events: none;
 }
 
-.reset-btn {
+.end-btn, .reset-btn {
   pointer-events: auto;
+  font-family: inherit;
+  font-size: 0.92rem;
+  font-weight: 500;
+  padding: 13px 22px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+
+.end-btn {
+  background: linear-gradient(145deg, #c45c4a, #a84a3a);
+  color: white;
+  border: none;
+  box-shadow: 0 6px 20px rgba(196, 92, 74, 0.3);
+}
+
+.reset-btn {
   background: var(--surface);
   border: 1px solid rgba(212, 168, 83, 0.28);
   color: var(--gold-light);
-  font-family: inherit;
-  font-size: 0.95rem;
-  font-weight: 500;
-  padding: 14px 30px;
-  border-radius: 999px;
-  cursor: pointer;
   display: flex;
   align-items: center;
   gap: 8px;
   box-shadow: var(--shadow);
-  transition: transform 0.15s;
 }
 
-.reset-btn:active { transform: scale(0.97); }
+.end-btn:active, .reset-btn:active { transform: scale(0.97); }
 
 /* Modal */
 .modal-overlay {

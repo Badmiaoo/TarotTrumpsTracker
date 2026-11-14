@@ -10,8 +10,11 @@ const grid = document.getElementById('grid');
 const playersSections = document.getElementById('players-sections');
 const fallenCountEl = document.getElementById('fallen-count');
 const remainingCountEl = document.getElementById('remaining-count');
+const highestEl = document.getElementById('highest-remaining');
+const lowestEl = document.getElementById('lowest-remaining');
 const progressBar = document.getElementById('progress-bar');
 const resetBtn = document.getElementById('reset-btn');
+const endBtn = document.getElementById('end-btn');
 const modalOverlay = document.getElementById('modal-overlay');
 const modalCancel = document.getElementById('modal-cancel');
 const modalConfirm = document.getElementById('modal-confirm');
@@ -174,6 +177,27 @@ function updateStats() {
   fallenCountEl.textContent = fallen;
   remainingCountEl.textContent = TOTAL - fallen;
   progressBar.style.width = (fallen / TOTAL * 100) + '%';
+
+  const remaining = [];
+  for (let i = 1; i <= 21; i++) if (!(i in assignments)) remaining.push(i);
+  const hasExcuse = !(0 in assignments);
+
+  if (remaining.length === 0 && !hasExcuse) {
+    highestEl.textContent = '—';
+    lowestEl.textContent = '—';
+    return;
+  }
+
+  const highest = remaining.length ? Math.max(...remaining) : null;
+  highestEl.textContent = highest !== null ? highest : '—';
+
+  let lowestDisplay = '—';
+  if (hasExcuse) {
+    lowestDisplay = 'E';
+  } else if (remaining.length) {
+    lowestDisplay = Math.min(...remaining);
+  }
+  lowestEl.textContent = lowestDisplay;
 }
 
 function openSelect(cardId, isReassign) {
@@ -217,7 +241,16 @@ function resetAssignments() {
   renderAll();
 }
 
+function endGame() {
+  if (confirm('Terminer la partie et remettre toutes les cartes ?')) {
+    assignments = {};
+    saveState();
+    renderAll();
+  }
+}
+
 resetBtn.addEventListener('click', () => modalOverlay.hidden = false);
+endBtn.addEventListener('click', endGame);
 modalCancel.addEventListener('click', () => modalOverlay.hidden = true);
 modalConfirm.addEventListener('click', () => {
   resetAssignments();
