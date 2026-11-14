@@ -12,6 +12,7 @@ const fallenCountEl = document.getElementById('fallen-count');
 const remainingCountEl = document.getElementById('remaining-count');
 const highestEl = document.getElementById('highest-remaining');
 const lowestEl = document.getElementById('lowest-remaining');
+const excuseEl = document.getElementById('excuse-status');
 const progressBar = document.getElementById('progress-bar');
 const resetBtn = document.getElementById('reset-btn');
 const endBtn = document.getElementById('end-btn');
@@ -178,28 +179,24 @@ function updateStats() {
   if (remainingCountEl) remainingCountEl.textContent = TOTAL - fallen;
   if (progressBar) progressBar.style.width = (fallen / TOTAL * 100) + '%';
 
-  const remaining = [];
+  // Only 1-21 for highest/lowest (Excuse excluded)
+  const remainingNumbers = [];
   for (let i = 1; i <= 21; i++) {
-    if (!(i in assignments)) remaining.push(i);
+    if (!(i in assignments)) remainingNumbers.push(i);
   }
-  const hasExcuse = !(0 in assignments);
 
-  if (remaining.length === 0 && !hasExcuse) {
+  if (remainingNumbers.length === 0) {
     if (highestEl) highestEl.textContent = '—';
     if (lowestEl) lowestEl.textContent = '—';
-    return;
+  } else {
+    if (highestEl) highestEl.textContent = Math.max(...remainingNumbers);
+    if (lowestEl) lowestEl.textContent = Math.min(...remainingNumbers);
   }
 
-  const highest = remaining.length ? Math.max(...remaining) : null;
-  if (highestEl) highestEl.textContent = highest !== null ? highest : '—';
-
-  let lowestDisplay = '—';
-  if (hasExcuse) {
-    lowestDisplay = 'E';
-  } else if (remaining.length) {
-    lowestDisplay = Math.min(...remaining);
+  // Excuse status
+  if (excuseEl) {
+    excuseEl.textContent = (0 in assignments) ? 'jouée' : 'non jouée';
   }
-  if (lowestEl) lowestEl.textContent = lowestDisplay;
 }
 
 function openSelect(cardId, isReassign) {
