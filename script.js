@@ -1,6 +1,6 @@
 const TOTAL = 22;
 const BOUTS = new Set([1, 21, 0]);
-const COLORS = ['#e74c3c', '#3498db', '#2ecc71', '#f39c12', '#9b59b6', '#1abc9c'];
+const COLORS = ['#e74c3c', '#3498db', '#2ecc71', '#f39c12', '#9b59b6'];
 
 const setupScreen = document.getElementById('setup-screen');
 const app = document.getElementById('app');
@@ -16,20 +16,21 @@ const modalOverlay = document.getElementById('modal-overlay');
 const modalCancel = document.getElementById('modal-cancel');
 const modalConfirm = document.getElementById('modal-confirm');
 const selectOverlay = document.getElementById('select-overlay');
+const selectTitle = document.getElementById('select-title');
 const playerChips = document.getElementById('player-chips');
 const cancelSelect = document.getElementById('cancel-select');
 
 let players = [];
-let assignments = {}; // cardId -> playerId
+let assignments = {};
 let selectedCardId = null;
 let playerCount = 4;
 
 function loadState() {
   try {
-    const savedPlayers = localStorage.getItem('tarot-players');
-    const savedAssign = localStorage.getItem('tarot-assignments');
-    if (savedPlayers) players = JSON.parse(savedPlayers);
-    if (savedAssign) assignments = JSON.parse(savedAssign);
+    const p = localStorage.getItem('tarot-players');
+    const a = localStorage.getItem('tarot-assignments');
+    if (p) players = JSON.parse(p);
+    if (a) assignments = JSON.parse(a);
   } catch (e) {
     players = [];
     assignments = {};
@@ -58,9 +59,9 @@ function renderNameInputs() {
   for (let i = 0; i < playerCount; i++) {
     const input = document.createElement('input');
     input.className = 'name-input';
-    input.placeholder = `Joueur ${i + 1}`;
+    input.placeholder = `Nom du joueur ${i + 1}`;
     input.value = players[i]?.name || '';
-    input.dataset.index = i;
+    input.maxLength = 16;
     namesInputs.appendChild(input);
   }
 }
@@ -69,22 +70,18 @@ document.querySelectorAll('.count-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.count-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-    playerCount = parseInt(btn.dataset.count);
+    playerCount = +btn.dataset.count;
     renderNameInputs();
   });
 });
 
 startBtn.addEventListener('click', () => {
   const inputs = namesInputs.querySelectorAll('.name-input');
-  players = [];
-  inputs.forEach((input, i) => {
-    const name = input.value.trim() || `Joueur ${i + 1}`;
-    players.push({
-      id: i,
-      name,
-      color: COLORS[i % COLORS.length]
-    });
-  });
+  players = Array.from(inputs).map((input, i) => ({
+    id: i,
+    name: input.value.trim() || `Joueur ${i + 1}`,
+    color: COLORS[i % COLORS.length]
+  }));
   assignments = {};
   saveState();
   showApp();
@@ -94,33 +91,29 @@ function createCard(id, isExcuse = false) {
   const card = document.createElement('button');
   card.className = 'card';
   if (BOUTS.has(id)) card.classList.add('bout');
-  if (isExcuse) card.classList.add('excuse');
   card.dataset.id = id;
   card.type = 'button';
 
-  const imgName = isExcuse ? 'mat' : id;
-  card.style.backgroundImage = `url('images/${imgName}.jpg')`;
+  const img = isExcuse ? 'mat' : id;
+  card.style.backgroundImage = `url('images/${img}.jpg')`;
 
-  const number = document.createElement('span');
-  number.className = 'card-number';
-  number.textContent = isExcuse ? 'E' : id;
-  card.appendChild(number);
+  const num = document.createElement('span');
+  num.className = 'card-number';
+  num.textContent = isExcuse ? 'E' : id;
+  card.appendChild(num);
 
   return card;
 }
 
 function renderRemaining() {
   grid.innerHTML = '';
-  const remaining = [];
-  for (let i = 1; i <= 21; i++) {
-    if (!(i in assignments)) remaining.push(i);
-  }
-  if (!(0 in assignments)) remaining.push(0);
+  const ids = [];
+  for (let i = 21; i >= 1; i--) if (!(i in assignments)) ids.push(i);
+  if (!(0 in assignments)) ids.push(0);
 
-  remaining.forEach(id => {
-    const isExcuse = id === 0;
-    const card = createCard(id, isExcuse);
-    card.addEventListener('click', () => openSelect(id));
+  ids.forEach(id => {
+    const card = createCard(id, id === 0);
+    card.addEventListener('click', () => openSelect(id, false));
     grid.appendChild(card);
   });
 }
@@ -142,28 +135,26 @@ function renderPlayers() {
     name.className = 'player-name';
     name.textContent = player.name;
 
-    const cardsOfPlayer = Object.entries(assignments)
-      .filter(([cid, pid]) => pid === player.id)
-      .map(([cid]) => parseInt(cid))
-      .sort((a, b) => b - a); // high to low
+    const cards = Object.entries(assignments)
+      .filter(([, pid]) => pid === player.id)
+      .map(([cid]) => +cid)
+      .sort((a, b) => b - a);
 
     const count = document.createElement('div');
     count.className = 'player-count';
-    count.textContent = cardsOfPlayer.length;
+    count.textContent = cards.length;
 
-    header.appendChild(dot);
-    header.appendChild(name);
-    header.appendChild(count);
+    header.append(dot, name, count);
     section.appendChild(header);
 
     const pGrid = document.createElement('div');
     pGrid.className = 'player-grid';
 
-    cardsOfPlayer.forEach(id => {
-      const isExcuse = id === 0;
-      const card = createCard(id, isExcuse);
+    cards.forEach(id => {
+      const card = createCard(id, id === 0);
       card.classList.add('assigned');
       card.style.setProperty('--player-color', player.color);
+      card.addEventListener('click', () => openSelect(id, true));
       pGrid.appendChild(card);
     });
 
@@ -182,12 +173,14 @@ function updateStats() {
   const fallen = Object.keys(assignments).length;
   fallenCountEl.textContent = fallen;
   remainingCountEl.textContent = TOTAL - fallen;
-  progressBar.style.width = ((fallen / TOTAL) * 100) + '%';
+  progressBar.style.width = (fallen / TOTAL * 100) + '%';
 }
 
-function openSelect(cardId) {
+function openSelect(cardId, isReassign) {
   selectedCardId = cardId;
+  selectTitle.textContent = isReassign ? 'Réassigner à…' : 'Qui a joué cette carte ?';
   playerChips.innerHTML = '';
+
   players.forEach(player => {
     const chip = document.createElement('button');
     chip.className = 'chip';
@@ -195,6 +188,7 @@ function openSelect(cardId) {
     chip.addEventListener('click', () => assignTo(player.id));
     playerChips.appendChild(chip);
   });
+
   selectOverlay.hidden = false;
 }
 
@@ -213,7 +207,7 @@ function closeSelect() {
 }
 
 cancelSelect.addEventListener('click', closeSelect);
-selectOverlay.addEventListener('click', (e) => {
+selectOverlay.addEventListener('click', e => {
   if (e.target === selectOverlay) closeSelect();
 });
 
@@ -223,22 +217,17 @@ function resetAssignments() {
   renderAll();
 }
 
-resetBtn.addEventListener('click', () => {
-  modalOverlay.hidden = false;
-});
+resetBtn.addEventListener('click', () => modalOverlay.hidden = false);
 modalCancel.addEventListener('click', () => modalOverlay.hidden = true);
 modalConfirm.addEventListener('click', () => {
   resetAssignments();
   modalOverlay.hidden = true;
 });
-modalOverlay.addEventListener('click', (e) => {
+modalOverlay.addEventListener('click', e => {
   if (e.target === modalOverlay) modalOverlay.hidden = true;
 });
 
 // Init
 loadState();
-if (players.length === 0) {
-  showSetup();
-} else {
-  showApp();
-}
+if (players.length === 0) showSetup();
+else showApp();

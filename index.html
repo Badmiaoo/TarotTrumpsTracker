@@ -16,9 +16,9 @@
   <!-- Setup Screen -->
   <div class="setup-screen" id="setup-screen">
     <div class="setup-content">
-      <div class="header-ornament"></div>
-      <h1>Joueurs</h1>
-      <p class="subtitle">Avant de commencer</p>
+      <div class="ornament"></div>
+      <h1>Partie</h1>
+      <p class="subtitle">Qui joue ?</p>
       
       <div class="player-count">
         <button class="count-btn" data-count="3">3</button>
@@ -26,20 +26,18 @@
         <button class="count-btn" data-count="5">5</button>
       </div>
       
-      <div class="names-inputs" id="names-inputs">
-        <!-- Generated -->
-      </div>
+      <div class="names-inputs" id="names-inputs"></div>
       
-      <button class="start-btn" id="start-btn">Commencer la partie</button>
+      <button class="start-btn" id="start-btn">Commencer</button>
     </div>
   </div>
 
   <!-- Main App -->
   <div class="app" id="app" hidden>
     <header class="header">
-      <div class="header-ornament"></div>
+      <div class="ornament"></div>
       <h1>Atouts</h1>
-      <p class="subtitle">Tracker de jeu</p>
+      <p class="subtitle">Tracker</p>
     </header>
 
     <div class="stats">
@@ -59,13 +57,9 @@
     </div>
 
     <h2 class="section-title">Restants</h2>
-    <main class="grid" id="grid">
-      <!-- Remaining cards -->
-    </main>
+    <main class="grid" id="grid"></main>
 
-    <div id="players-sections">
-      <!-- Player groups generated -->
-    </div>
+    <div id="players-sections"></div>
 
     <footer class="footer">
       <button class="reset-btn" id="reset-btn" type="button">
@@ -75,25 +69,24 @@
     </footer>
   </div>
 
-  <!-- Player selection overlay -->
+  <!-- Selection Overlay -->
   <div class="select-overlay" id="select-overlay" hidden>
     <div class="select-panel">
-      <h3>Qui a joué ?</h3>
-      <div class="player-chips" id="player-chips">
-        <!-- Chips -->
-      </div>
+      <div class="panel-handle"></div>
+      <h3 id="select-title">Qui a joué cette carte ?</h3>
+      <div class="player-chips" id="player-chips"></div>
       <button class="cancel-select" id="cancel-select">Annuler</button>
     </div>
   </div>
 
-  <!-- Confirmation modal -->
+  <!-- Reset Modal -->
   <div class="modal-overlay" id="modal-overlay" hidden>
     <div class="modal">
       <h2>Réinitialiser ?</h2>
-      <p>Tous les atouts reviendront dans la liste principale. Les joueurs sont conservés.</p>
+      <p>Tous les atouts reviendront dans la liste principale.<br>Les joueurs sont conservés.</p>
       <div class="modal-actions">
-        <button class="modal-btn cancel" id="modal-cancel" type="button">Annuler</button>
-        <button class="modal-btn confirm" id="modal-confirm" type="button">Confirmer</button>
+        <button class="modal-btn cancel" id="modal-cancel">Annuler</button>
+        <button class="modal-btn confirm" id="modal-confirm">Confirmer</button>
       </div>
     </div>
   </div>
