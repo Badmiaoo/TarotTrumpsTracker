@@ -541,17 +541,24 @@ h1 {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  margin: 16px auto 0;
+  gap: 12px;
+  margin: 18px auto 0;
   background: var(--surface);
-  border: 1px solid rgba(212, 168, 83, 0.3);
+  border: 1px solid rgba(212, 168, 83, 0.28);
   color: var(--gold-light);
-  padding: 8px 16px;
+  padding: 10px 20px;
   border-radius: 999px;
   font-family: inherit;
-  font-size: 0.85rem;
+  font-size: 0.92rem;
   font-weight: 500;
   cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  transition: transform 0.15s, background 0.15s;
+}
+
+.mode-toggle:active {
+  transform: scale(0.97);
+  background: var(--surface-hover);
 }
 
 .mode-switch {
@@ -598,8 +605,8 @@ h1 {
   left: 10%;
   right: 10%;
   height: 3px;
-  background: #c45c4a;
+  background: var(--gold-light);
   transform: translateY(-50%) rotate(-18deg);
   z-index: 4;
-  box-shadow: 0 0 6px rgba(0,0,0,0.6);
+  box-shadow: 0 0 6px rgba(0,0,0,0.7);
 }
