@@ -183,8 +183,8 @@ h1 {
 }
 
 .stat-label {
-  font-size: 0.65rem;
-  color: var(--text-muted);
+  font-size: 0.68rem;
+  color: #c4b5a6;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   margin-top: 4px;
@@ -304,8 +304,9 @@ h1 {
 
 .player-name {
   font-weight: 600;
-  font-size: 1rem;
+  font-size: 1.02rem;
   letter-spacing: 0.02em;
+  color: #f5efe6;
 }
 
 .player-count {
@@ -330,15 +331,16 @@ h1 {
 .select-overlay[hidden] { display: none; }
 
 .select-panel {
-  background: var(--bg-elevated);
-  border: 1px solid rgba(212, 168, 83, 0.2);
+  background: #1a1614;
+  border: 1px solid rgba(212, 168, 83, 0.35);
   border-bottom: none;
   border-radius: 28px 28px 0 0;
   padding: 12px 20px 36px;
   width: 100%;
   max-width: 480px;
   text-align: center;
-  box-shadow: 0 -20px 60px rgba(0,0,0,0.5);
+  box-shadow: 0 -20px 60px rgba(0,0,0,0.6);
+  color: #f5efe6;
 }
 
 .panel-handle {
@@ -369,17 +371,21 @@ h1 {
   display: flex;
   align-items: center;
   gap: 10px;
-  background: var(--surface);
-  border: 1px solid rgba(212, 168, 83, 0.2);
-  padding: 12px 18px;
+  background: #25211e;
+  border: 1px solid rgba(212, 168, 83, 0.45);
+  color: #f5efe6;
+  padding: 14px 20px;
   border-radius: 999px;
   cursor: pointer;
-  font-weight: 500;
-  font-size: 0.98rem;
+  font-weight: 600;
+  font-size: 1.05rem;
   transition: all 0.15s;
-  min-width: 120px;
+  min-width: 130px;
   justify-content: center;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.6);
 }
+
+.chip:active { transform: scale(0.96); background: #2e2926; }
 
 .chip:active { transform: scale(0.96); background: var(--surface-hover); }
 
@@ -392,12 +398,13 @@ h1 {
 
 .cancel-select {
   background: transparent;
-  border: 1px solid rgba(212, 168, 83, 0.25);
-  color: var(--text-muted);
+  border: 1px solid rgba(212, 168, 83, 0.4);
+  color: #d4c4b0;
   padding: 12px 28px;
   border-radius: 999px;
   font-family: inherit;
-  font-size: 0.95rem;
+  font-size: 0.98rem;
+  font-weight: 500;
   cursor: pointer;
 }
 
