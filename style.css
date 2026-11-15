@@ -535,3 +535,71 @@ h1 {
   text-decoration-color: #c4b5a6;
   opacity: 0.75;
 }
+
+/* Mode toggle */
+.mode-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 16px auto 0;
+  background: var(--surface);
+  border: 1px solid rgba(212, 168, 83, 0.3);
+  color: var(--gold-light);
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.mode-switch {
+  width: 36px;
+  height: 20px;
+  background: #3a3330;
+  border-radius: 10px;
+  position: relative;
+  transition: background 0.2s;
+}
+
+.mode-switch::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  background: #a89b8c;
+  border-radius: 50%;
+  transition: transform 0.2s, background 0.2s;
+}
+
+.mode-toggle.on .mode-switch {
+  background: var(--gold);
+}
+
+.mode-toggle.on .mode-switch::after {
+  transform: translateX(16px);
+  background: #1a1208;
+}
+
+/* Simple mode: crossed cards */
+.card.crossed {
+  filter: grayscale(0.7) brightness(0.45);
+  opacity: 0.75;
+  position: relative;
+}
+
+.card.crossed::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 10%;
+  right: 10%;
+  height: 3px;
+  background: #c45c4a;
+  transform: translateY(-50%) rotate(-18deg);
+  z-index: 4;
+  box-shadow: 0 0 6px rgba(0,0,0,0.6);
+}

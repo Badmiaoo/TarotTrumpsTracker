@@ -23,27 +23,45 @@ const selectOverlay = document.getElementById('select-overlay');
 const selectTitle = document.getElementById('select-title');
 const playerChips = document.getElementById('player-chips');
 const cancelSelect = document.getElementById('cancel-select');
+const modeToggle = document.getElementById('mode-toggle');
 
 let players = [];
 let assignments = {};
 let selectedCardId = null;
 let playerCount = 4;
+let playerMode = true; // true = dispatch to players, false = simple crossed mode
+let crossed = new Set(); // for simple mode
 
 function loadState() {
   try {
     const p = localStorage.getItem('tarot-players');
     const a = localStorage.getItem('tarot-assignments');
+    const m = localStorage.getItem('tarot-player-mode');
+    const c = localStorage.getItem('tarot-crossed');
     if (p) players = JSON.parse(p);
     if (a) assignments = JSON.parse(a);
+    if (m !== null) playerMode = m === 'true';
+    if (c) crossed = new Set(JSON.parse(c));
   } catch (e) {
     players = [];
     assignments = {};
+    crossed = new Set();
   }
+  updateModeUI();
 }
 
 function saveState() {
   localStorage.setItem('tarot-players', JSON.stringify(players));
   localStorage.setItem('tarot-assignments', JSON.stringify(assignments));
+  localStorage.setItem('tarot-player-mode', playerMode);
+  localStorage.setItem('tarot-crossed', JSON.stringify([...crossed]));
+}
+
+function updateModeUI() {
+  if (!modeToggle) return;
+  modeToggle.classList.toggle('on', playerMode);
+  const label = modeToggle.querySelector('.mode-label');
+  if (label) label.textContent = playerMode ? 'Mode joueurs' : 'Mode simple';
 }
 
 function showSetup() {
@@ -112,12 +130,30 @@ function createCard(id, isExcuse = false) {
 function renderRemaining() {
   grid.innerHTML = '';
   const ids = [];
-  for (let i = 21; i >= 1; i--) if (!(i in assignments)) ids.push(i);
-  if (!(0 in assignments)) ids.push(0);
+
+  if (playerMode) {
+    for (let i = 21; i >= 1; i--) if (!(i in assignments)) ids.push(i);
+    if (!(0 in assignments)) ids.push(0);
+  } else {
+    for (let i = 21; i >= 1; i--) ids.push(i);
+    ids.push(0);
+  }
 
   ids.forEach(id => {
     const card = createCard(id, id === 0);
-    card.addEventListener('click', () => openSelect(id, false));
+    if (!playerMode && crossed.has(id)) {
+      card.classList.add('crossed');
+    }
+    card.addEventListener('click', () => {
+      if (playerMode) {
+        openSelect(id, false);
+      } else {
+        if (crossed.has(id)) crossed.delete(id);
+        else crossed.add(id);
+        saveState();
+        renderAll();
+      }
+    });
     grid.appendChild(card);
   });
 }
@@ -169,20 +205,35 @@ function renderPlayers() {
 
 function renderAll() {
   renderRemaining();
-  renderPlayers();
+  if (playerMode) {
+    playersSections.style.display = '';
+    renderPlayers();
+  } else {
+    playersSections.style.display = 'none';
+    playersSections.innerHTML = '';
+  }
   updateStats();
 }
 
 function updateStats() {
-  const fallen = Object.keys(assignments).length;
+  let fallen, isPlayed;
+
+  if (playerMode) {
+    fallen = Object.keys(assignments).length;
+    isPlayed = (id) => id in assignments;
+  } else {
+    fallen = crossed.size;
+    isPlayed = (id) => crossed.has(id);
+  }
+
   if (fallenCountEl) fallenCountEl.textContent = fallen;
   if (remainingCountEl) remainingCountEl.textContent = TOTAL - fallen;
   if (progressBar) progressBar.style.width = (fallen / TOTAL * 100) + '%';
 
-  // Only 1-21 for highest/lowest (Excuse excluded)
+  // Only 1-21 for highest/lowest
   const remainingNumbers = [];
   for (let i = 1; i <= 21; i++) {
-    if (!(i in assignments)) remainingNumbers.push(i);
+    if (!isPlayed(i)) remainingNumbers.push(i);
   }
 
   if (remainingNumbers.length === 0) {
@@ -193,9 +244,9 @@ function updateStats() {
     if (lowestEl) lowestEl.textContent = Math.min(...remainingNumbers);
   }
 
-  // Excuse status: big E, darker + crossed if played
+  // Excuse status
   if (excuseEl) {
-    const played = (0 in assignments);
+    const played = isPlayed(0);
     excuseEl.textContent = 'E';
     excuseEl.classList.toggle('played', played);
   }
@@ -261,6 +312,16 @@ modalConfirm.addEventListener('click', () => {
 modalOverlay.addEventListener('click', e => {
   if (e.target === modalOverlay) modalOverlay.hidden = true;
 });
+
+// Mode toggle
+if (modeToggle) {
+  modeToggle.addEventListener('click', () => {
+    playerMode = !playerMode;
+    updateModeUI();
+    saveState();
+    renderAll();
+  });
+}
 
 // Init
 loadState();
