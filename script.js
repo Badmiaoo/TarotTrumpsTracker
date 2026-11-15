@@ -193,9 +193,11 @@ function updateStats() {
     if (lowestEl) lowestEl.textContent = Math.min(...remainingNumbers);
   }
 
-  // Excuse status
+  // Excuse status: big E, darker + crossed if played
   if (excuseEl) {
-    excuseEl.textContent = (0 in assignments) ? 'jouée' : 'non jouée';
+    const played = (0 in assignments);
+    excuseEl.textContent = 'E';
+    excuseEl.classList.toggle('played', played);
   }
 }
 
@@ -241,10 +243,11 @@ function resetAssignments() {
 }
 
 function endGame() {
-  if (confirm('Terminer la partie et remettre toutes les cartes ?')) {
+  if (confirm('Terminer la partie et revenir au choix des joueurs ?')) {
+    players = [];
     assignments = {};
     saveState();
-    renderAll();
+    showSetup();
   }
 }
 

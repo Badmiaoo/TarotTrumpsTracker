@@ -257,10 +257,10 @@ h1 {
 
 .card-number {
   font-family: 'Cinzel', serif;
-  font-size: 1rem;
+  font-size: 1.05rem;
   font-weight: 700;
-  color: white;
-  text-shadow: 0 1px 4px rgba(0,0,0,0.9);
+  color: #ffffff;
+  text-shadow: 0 1px 3px rgba(0,0,0,1), 0 0 8px rgba(0,0,0,0.8);
   z-index: 2;
   margin-bottom: 8px;
 }
@@ -507,4 +507,20 @@ h1 {
 @media (max-width: 380px) {
   .grid, .player-grid { gap: 8px; }
   h1 { font-size: 2.3rem; }
+}
+
+/* Excuse KPI */
+.excuse-kpi {
+  font-size: 1.9rem !important;
+  font-weight: 700;
+  color: var(--gold-light);
+  transition: all 0.2s;
+}
+
+.excuse-kpi.played {
+  color: #8a7d70;
+  text-decoration: line-through;
+  text-decoration-thickness: 2.5px;
+  text-decoration-color: #c4b5a6;
+  opacity: 0.75;
 }
