@@ -24,6 +24,7 @@ const selectTitle = document.getElementById('select-title');
 const playerChips = document.getElementById('player-chips');
 const cancelSelect = document.getElementById('cancel-select');
 const modeToggle = document.getElementById('mode-toggle');
+const modeToggleSetup = document.getElementById('mode-toggle-setup');
 
 let players = [];
 let assignments = {};
@@ -58,10 +59,12 @@ function saveState() {
 }
 
 function updateModeUI() {
-  if (!modeToggle) return;
-  modeToggle.classList.toggle('on', playerMode);
-  const label = modeToggle.querySelector('.mode-label');
-  if (label) label.textContent = playerMode ? 'Mode joueurs' : 'Mode simple';
+  [modeToggle, modeToggleSetup].forEach(btn => {
+    if (!btn) return;
+    btn.classList.toggle('on', playerMode);
+    const label = btn.querySelector('.mode-label');
+    if (label) label.textContent = playerMode ? 'Mode joueurs' : 'Mode simple';
+  });
 }
 
 function showSetup() {
@@ -74,6 +77,12 @@ function showApp() {
   setupScreen.style.display = 'none';
   app.hidden = false;
   renderAll();
+  updateEndButton();
+}
+
+function updateEndButton() {
+  if (!endBtn) return;
+  endBtn.style.display = playerMode ? '' : 'none';
 }
 
 function renderNameInputs() {
@@ -313,17 +322,22 @@ modalOverlay.addEventListener('click', e => {
   if (e.target === modalOverlay) modalOverlay.hidden = true;
 });
 
-// Mode toggle
-if (modeToggle) {
-  modeToggle.addEventListener('click', () => {
-    playerMode = !playerMode;
-    updateModeUI();
-    saveState();
-    renderAll();
-  });
+// Mode toggle (both places)
+function handleModeToggle() {
+  playerMode = !playerMode;
+  updateModeUI();
+  saveState();
+  if (playerMode && players.length === 0) {
+    showSetup();
+  } else {
+    showApp();
+  }
 }
+
+if (modeToggle) modeToggle.addEventListener('click', handleModeToggle);
+if (modeToggleSetup) modeToggleSetup.addEventListener('click', handleModeToggle);
 
 // Init
 loadState();
-if (players.length === 0) showSetup();
+if (playerMode && players.length === 0) showSetup();
 else showApp();
