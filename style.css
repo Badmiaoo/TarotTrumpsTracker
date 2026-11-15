@@ -331,16 +331,16 @@ h1 {
 .select-overlay[hidden] { display: none; }
 
 .select-panel {
-  background: #1a1614;
-  border: 1px solid rgba(212, 168, 83, 0.35);
+  background: #120f0d;
+  border: 1px solid rgba(212, 168, 83, 0.5);
   border-bottom: none;
   border-radius: 28px 28px 0 0;
-  padding: 12px 20px 36px;
+  padding: 16px 20px 40px;
   width: 100%;
   max-width: 480px;
   text-align: center;
-  box-shadow: 0 -20px 60px rgba(0,0,0,0.6);
-  color: #f5efe6;
+  box-shadow: 0 -24px 70px rgba(0,0,0,0.7);
+  color: #ffffff;
 }
 
 .panel-handle {
@@ -353,10 +353,11 @@ h1 {
 
 .select-panel h3 {
   font-family: 'Cinzel', serif;
-  font-size: 1.25rem;
-  color: var(--gold-light);
-  margin-bottom: 22px;
+  font-size: 1.4rem;
+  color: #f0d78c;
+  margin-bottom: 24px;
   letter-spacing: 0.04em;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.6);
 }
 
 .player-chips {
@@ -370,20 +371,23 @@ h1 {
 .chip {
   display: flex;
   align-items: center;
-  gap: 10px;
-  background: #25211e;
-  border: 1px solid rgba(212, 168, 83, 0.45);
-  color: #f5efe6;
-  padding: 14px 20px;
+  gap: 12px;
+  background: #3a322c;
+  border: 2px solid #d4a853;
+  color: #ffffff;
+  padding: 16px 22px;
   border-radius: 999px;
   cursor: pointer;
-  font-weight: 600;
-  font-size: 1.05rem;
+  font-weight: 700;
+  font-size: 1.15rem;
   transition: all 0.15s;
-  min-width: 130px;
+  min-width: 140px;
   justify-content: center;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.6);
+  text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
 }
+
+.chip:active { transform: scale(0.96); background: #4a4038; }
 
 .chip:active { transform: scale(0.96); background: #2e2926; }
 
