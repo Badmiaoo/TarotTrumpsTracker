@@ -138,36 +138,40 @@ function createCard(id, isExcuse = false) {
 
 function renderRemaining() {
   grid.innerHTML = '';
-  const ids = [];
 
   if (playerMode) {
+    // Player mode: only unassigned cards
+    const ids = [];
     for (let i = 21; i >= 1; i--) if (!(i in assignments)) ids.push(i);
     if (!(0 in assignments)) ids.push(0);
+
+    ids.forEach(id => {
+      const card = createCard(id, id === 0);
+      card.addEventListener('click', () => openSelect(id, false));
+      grid.appendChild(card);
+    });
   } else {
+    // Simple mode: all cards, crossed if marked
+    const ids = [];
     for (let i = 21; i >= 1; i--) ids.push(i);
     ids.push(0);
-  }
 
-  ids.forEach(id => {
-    const card = createCard(id, id === 0);
-    if (!playerMode && crossed.has(id)) {
-      card.classList.add('crossed');
-    }
-    card.addEventListener('click', () => {
-      if (playerMode) {
-        openSelect(id, false);
-      } else {
+    ids.forEach(id => {
+      const card = createCard(id, id === 0);
+      if (crossed.has(id)) card.classList.add('crossed');
+      card.addEventListener('click', () => {
         if (crossed.has(id)) crossed.delete(id);
         else crossed.add(id);
         saveState();
         renderAll();
-      }
+      });
+      grid.appendChild(card);
     });
-    grid.appendChild(card);
-  });
+  }
 }
 
 function renderPlayers() {
+  if (!playerMode) return;
   playersSections.innerHTML = '';
   players.forEach(player => {
     const section = document.createElement('div');
@@ -222,6 +226,7 @@ function renderAll() {
     playersSections.innerHTML = '';
   }
   updateStats();
+  updateEndButton();
 }
 
 function updateStats() {
