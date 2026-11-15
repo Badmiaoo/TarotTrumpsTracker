@@ -303,6 +303,7 @@ selectOverlay.addEventListener('click', e => {
 
 function resetAssignments() {
   assignments = {};
+  crossed.clear();
   saveState();
   renderAll();
 }
